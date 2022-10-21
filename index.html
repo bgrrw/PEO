@@ -79,6 +79,7 @@
 	
 	//Fit Map to image overlay
 	map.fitBounds(latLngBounds);
+	map.options.minZoom = map.getZoom();
 	
 	//Cities Points
 	var cities = L.geoJSON(cities, {
