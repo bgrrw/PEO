@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<base target="_top">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Pan-European Odyssey</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
+	<script src="Cities.js" type="text/javascript"></script>
+	<style>
+	#map { position: absolute; top:0; bottom:0; right:0; left:0; }
+	body {
+		background-image: url('Background.jpg');
+		background-repeat:no-repeat;
+		background-size:cover;
+	}
+	.leaflet-container {
+    background-color:rgba(255,0,0,0.0);
+	}
+	</style>
+
+	
+</head>
+<body>
+
+<div id='map'></div>
+
+<script>
+    var baseLayers = {
+	'Terrain': L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+		maxZoom: 20,
+		subdomains:['mt0','mt1','mt2','mt3']
+	}),
+	'Imagery': L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}{r}.{ext}', {
+		attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	subdomains: 'abcd',
+	minZoom: 0,
+	maxZoom: 18,
+	ext: 'png'
+	})	
+	};
+    
+
+    var map = L.map('map', {
+      center: [47, 8],
+      zoom: 5,
+	  zoomSnap: 0.25,
+	  minZoom: 5.25,
+	  maxZoom: 7.25,
+      zoomControl: false,
+      dragging: true,
+	  doubleClickZoom: false,
+	  scrollWheelZoom: true
+	  //layers: [baseLayers["Imagery"]]
+    });
+
+	const latLngBounds = L.latLngBounds([[56.9764117, -19.7058228], [33.7140017, 23.3379733]]);
+
+	// Restrict panning
+	map.setMaxBounds(latLngBounds);
+	map.on('drag', function() {
+	map.panInsideBounds(latLngBounds, { animate: false });
+	});
+
+	//Image Overlay
+	var imageUrl = 'PEO.jpg';
+	var errorOverlayUrl = 'https://cdn-icons-png.flaticon.com/512/110/110686.png';
+	const altText = 'Pan-European Odyssey';
+
+	const imageOverlay = L.imageOverlay(imageUrl, latLngBounds, {
+		errorOverlayUrl,
+		alt: altText,
+		interactive: false,
+		opacity: 1
+	}).addTo(map);
+	
+	//Fit Map to image overlay
+	map.fitBounds(latLngBounds);
+	
+	//Cities Points
+	var cities = L.geoJSON(cities, {
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {
+				radius: 20,
+				opacity: 0,
+				fillOpacity: 0
+			}
+	);
+		},
+		onEachFeature: function (feature, layer) {
+			layer.bindPopup('<h1>'+feature.properties.CITY_NAME+'</h1>'+feature.properties.CNTRY_NAME);
+		}
+	}).addTo(map);
+
+</script>
+
+
+
+</body>
+</html>
