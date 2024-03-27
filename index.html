@@ -9,7 +9,10 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
-	<script src="Cities.js" type="text/javascript"></script>
+    <script src="Cities.js" type="text/javascript"></script>
+    <!-- Mini map -->
+    <script src="https://cdn.jsdelivr.net/gh/maneoverland/leaflet.WorldMiniMap@1.0.0/dist/Control.WorldMiniMap.js" integrity="sha512-PFw8St3qenU1/dmwCfiYYN/bRcqY1p3+sBATR+rZ6622eyXOk/8izVtlmm/k8qW7KbRIJsku838WCV5LMs6FCg==" crossorigin=""></script>
+    
 	<style>
 	#map { position: absolute; top:0; bottom:0; right:0; left:0; }
 	#Home-link {
@@ -71,7 +74,8 @@
 	//Fit Map to image overlay
 	map.fitBounds(latLngBounds);
 	map.options.minZoom = map.getZoom()-0.5;
-	
+	//Mini-Map
+	var worldMiniMap = L.control.worldMiniMap({position: 'bottomleft', style: {opacity: 0.9, borderRadius: '0px', backgroundColor: 'lightblue'}}).addTo(map);
 	//Cities Points
 	var cities = L.geoJSON(cities, {
 		pointToLayer: function (feature, latlng) {
